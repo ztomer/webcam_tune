@@ -1,0 +1,26 @@
+#!/bin/bash
+# pre-commit — delegates to the shared checkout's gates/commit_gate.sh, which runs the repo's gate in
+# STAGED scope (tools/gate.sh --staged) and the house structural layer even when that gate leaves it
+# out; without a tools/gate.sh, structural runs alone.
+# Installed by gates_of_heck/install.sh. It decides NOTHING itself: hooks are COPIED, so any logic
+# here reached a repo only when it re-installed (14 repos ran a retired copy on 2026-10-12), while
+# commit_gate.sh is read at runtime. The pre-push hook delegates to gates/push_gate.sh the same way.
+{ # parse-guard -- bash reads this group whole before running it (tests/test_parse_guard.py)
+set -euo pipefail
+
+GOH="${GOH_DIR:-${GOH:-$HOME/Projects/gates_of_heck}}"
+commit_gate="$GOH/gates/commit_gate.sh"
+if [ ! -f "$commit_gate" ]; then
+    root="$(git rev-parse --show-toplevel)"
+    commit_gate="$root/gates/commit_gate.sh"   # self-hosted: this IS gates_of_heck
+fi
+if [ ! -f "$commit_gate" ]; then
+    echo "✗ pre-commit: no gates_of_heck commit gate at $GOH/gates/commit_gate.sh -- clone" \
+        "gates_of_heck there, or point GOH_DIR at your checkout, then re-run its install.sh" >&2
+    exit 1
+fi
+# `bash <path>`, not `exec <path>`: executing the file directly also needs its exec bit, which lives
+# in another repo and is what a clone or tarball silently loses (upstreamed from ztools, 2026-10-05).
+exec bash "$commit_gate" "$@"
+exit
+} # parse-guard

@@ -1,0 +1,35 @@
+# webcam_tune profile. Every value the program uses for this camera is in this file; a missing
+# key is an error that names it. `webcam-tune apply` writes [controls] to the camera, and the
+# LaunchAgent re-applies them every time the camera is plugged in and every time the Mac wakes.
+# Controls left out are left alone. Tune the picture in any UVC app, then
+# `webcam-tune capture` rewrites [controls] with what the camera holds.
+
+name = "Razer Kiyo Pro (v1)"
+description = "Factory picture with the community's fixes: HDR off, steady frame rate, 60 Hz anti-flicker"
+version = "1.0.0"
+updated = 2026-11-01
+
+[device]
+vendor-id = 0x1532  # USB vendor id: Razer
+product-id = 0x0E05  # USB product id: Kiyo Pro (v1)
+
+[agent]
+settle-ms = 1500  # gather a burst of plug-in and wake events this long, then apply once
+ready-timeout-ms = 10000  # how long a camera that has just appeared gets to start answering
+retry-ms = 250  # how often to retry within that window
+usb-timeout-ms = 500  # the deadline for one USB control request
+
+[controls]
+power-line-frequency = 2  # anti-flicker: 1 = 50 Hz mains, 2 = 60 Hz (North America). Match your mains or lights band.
+backlight-compensation = 0  # "HDR" off: on, it caps the camera at 30 fps and flattens the image
+auto-exposure-mode = 8  # 8 = automatic exposure, 1 = manual
+auto-exposure-priority = 0  # hold the frame rate in dim light instead of slowing down to expose
+auto-white-balance-temp = true  # `webcam-tune lock wb` freezes it under fixed lighting
+auto-focus = true  # `webcam-tune lock focus` freezes it at your sitting distance (stops hunting)
+gain = 0  # 0..255
+brightness = 128  # 0..255, factory 128
+contrast = 128  # 0..255, factory 128
+saturation = 128  # 0..255, factory 128
+sharpness = 128  # 0..255, factory 128; lower it if edges halo
+zoom-abs = 100  # 100..400, 100 = widest
+pan-tilt-abs = { pan = 0, tilt = 0 }  # arc-seconds, steps of 3600; moves the picture only when zoomed in

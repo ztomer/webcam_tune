@@ -1,0 +1,12 @@
+# cargo-audit configuration. The [output] block is what makes the gate BITE: cargo-audit exits
+# 0 on `unmaintained` / `unsound` findings by default, so without this deny list the gate would
+# pass over precisely the class it exists to police. `quiet` is required alongside it.
+
+[output]
+quiet = true
+deny = ["warnings", "unmaintained", "unsound", "yanked"]
+
+[advisories]
+# RATCHET: empty on day one (2026-11-01, no advisory fired). An entry added here carries the
+# reason it may stand, and is deleted the day its advisory stops firing.
+ignore = []

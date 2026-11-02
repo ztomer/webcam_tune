@@ -1,0 +1,40 @@
+# gates_of_heck configuration. All keys optional; delete what you don't use.
+# Full key reference: docs/config.md in the gates_of_heck checkout
+# (or .gatesrc.example there for a commented starter with every key).
+GOH_MAX_LINES=500                 # file-length cap; unset disables the check
+# GOH_EXCLUDE='^vendor/|\.generated\.'  # not ours to re-style (never exempts the secrets scan)
+# GOH_ALLOW='<glyph>'                          # extra permitted characters (keep minimal)
+# GOH_LINE_EXCLUDE='third_party/'       # length-only alias
+# GOH_PY_COV_MIN=95
+# GOH_SWIFT_MODE=xcode            # or spm
+# GOH_SWIFT_SCHEME=MyAppTests
+# GOH_SWIFT_COV_MIN=95
+# GOH_MAX_SCRATCH_GB=25 etc. live OUTSIDE the gates since v0.8.0 — set them
+# in the environment for the scripts repo's bin/disk_hygiene.sh, not here.
+
+# Every scanner's floor: a full-scope scan that reads LESS than this has lost its subject and is
+# red, not clean. Nine tenths of what each read on 2026-11-01; lower one with the tree in the
+# same commit, never to absorb a scan that went blind.
+GOH_EMOJI_MIN_FILES=30                # read 34
+GOH_CONFLICT_MARKERS_MIN_FILES=30     # read 34
+GOH_FILE_LENGTH_MIN_FILES=11          # read 13
+GOH_SECRETS_MIN_FILES=30              # read 34
+GOH_SHELL_LINT_MIN_FILES=1            # read 2
+GOH_EARLY_EXIT_PIPE_MIN_FILES=6       # read 7
+GOH_DEAD_AFTER_EXEC_MIN_FILES=6       # read 7
+GOH_BARE_HOOK_INDEX_MIN_FILES=6       # read 7
+GOH_BARE_PYTHON_MIN_FILES=5           # read 6
+GOH_CHECKOUT_CREDENTIALS_MIN_FILES=1  # read 1
+GOH_TAP_WRITES_MIN_FILES=7            # read 8
+GOH_MD_LINKS_MIN_LINKS=2              # read 3
+GOH_UNREAPED_SPAWN_MIN_FILES=8        # read 9
+GOH_BUSY_LOOP_MIN_FILES=6             # read 7
+
+# The one shipped configuration: Apple silicon macOS, release (install.sh refuses the rest).
+GOH_RUST_LINT_CONFIGS='--target aarch64-apple-darwin:--release'
+# Coverage floor (lines). Measured 72.88% on 2026-11-01; the uncovered code is what needs the
+# real camera (src/camera.rs USB transfers) or the kernel (src/notify.rs IOKit callbacks).
+# Raise it as the number rises; never lower it.
+GOH_COV_FLOOR_RUST=70
+# A commit that ADDS a test names, in a `Red-run:` trailer, the mutation that turned it red.
+GOH_RED_RUN=1

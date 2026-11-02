@@ -1,0 +1,4 @@
+# Test code may unwrap/expect/panic: a failing assertion IS the point (the house rule).
+allow-unwrap-in-tests = true
+allow-expect-in-tests = true
+allow-panic-in-tests = true

@@ -1,0 +1,54 @@
+name: gate
+
+# ONE job, ONE command: `./tools/gate.sh --full`, the same script the pre-push hook runs, so CI
+# and the developer's machine cannot disagree about what green means. No platform matrix: this
+# drives macOS's USB and power APIs and builds on Apple silicon macOS only (install.sh refuses
+# everything else), so a Linux job could only be decoration.
+
+on:
+  push:
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gate:
+    runs-on: macos-26
+    timeout-minutes: 30
+    steps:
+      # persist-credentials: false on both checkouts: the structural gate refuses a job token
+      # left in git config, and nothing after the clone needs it.
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      # The house gates, consumed through GOH_DIR and never vendored. Public, so the default
+      # token reads it.
+      - name: Check out gates_of_heck
+        uses: actions/checkout@v7
+        with:
+          repository: ztomer/gates_of_heck
+          path: goh
+          persist-credentials: false
+      - name: Meet goh's tool floors
+        uses: ./goh/.github/actions/goh-floors
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.15"
+      - name: Toolchain (stable)
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy, llvm-tools-preview
+      - name: Install the tools the gate requires
+        env:
+          GOH_DIR: ${{ github.workspace }}/goh
+        run: |
+          set -euo pipefail
+          cmds="$(python3 "$GOH_DIR/gates/required_tools.py" --repo . --install)"
+          printf '%s\n' "$cmds"
+          grep -v '^#' <<<"$cmds" | bash -eux
+      - name: The gate
+        env:
+          GOH_DIR: ${{ github.workspace }}/goh
+        run: ./tools/gate.sh --full

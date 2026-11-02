@@ -1,0 +1,43 @@
+[package]
+name = "webcam-tune"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85"
+authors = ["Tomer Zaidentein <ztomer@gmail.com>"]
+description = "Keep a UVC webcam on one set of image settings on macOS, one profile per camera: re-applied on plug-in and wake"
+license = "MIT"
+repository = "https://github.com/ztomer/webcam_tune"
+publish = false
+
+[dependencies]
+# Pure-Rust USB. Its macOS backend carries on when the camera driver holds the device
+# exclusively, and control transfers on endpoint 0 still reach the UVC units (probed
+# 2026-11-01: brightness read 33, written 40, read 40, restored 33, agreeing with uvc-util).
+nusb = "0.2.9"
+toml = "1.1"
+# Plug-in and wake notifications on one CFRunLoop (src/notify.rs, the one file allowed
+# `unsafe`; tests/unsafe_scope.rs holds it there).
+core-foundation = "0.10.1"
+io-kit-sys = "0.5.0"
+# The house TUI (Kare glyphs, NO_COLOR and non-tty aware). A pinned git dependency on the
+# public gates_of_heck repo, so a fresh clone builds with no sibling checkout; `rev` is a
+# full commit sha so a push there cannot move what this builds.
+goh-tui = { git = "https://github.com/ztomer/gates_of_heck.git", rev = "40c8b92f9a0f7651faaa4902e61e07a413bf85ae" }
+jiff = "0.2.38"
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = true
+
+[lints.rust]
+unsafe_op_in_unsafe_fn = "deny"
+
+[lints.clippy]
+all = { level = "warn", priority = -1 }
+pedantic = { level = "warn", priority = -1 }
+nursery = { level = "warn", priority = -1 }
+unwrap_used = "warn"
+expect_used = "warn"
+panic = "warn"
+exit = "warn"
