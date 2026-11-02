@@ -154,10 +154,12 @@ build_and_install() {
     seed_profiles "$here"
     render_plist "$prefix/bin/webcam-tune" "$log" "$profiles" > "$agents/$label.plist"
     plutil -lint -s "$agents/$label.plist" || die "rendered an invalid plist"
-    if [ -z "${LAUNCHAGENTS_DIR:-}" ]; then
-        launchctl bootout "gui/$(id -u)/$label" 2>/dev/null || true
-        launchctl bootstrap "gui/$(id -u)" "$agents/$label.plist"
+    if [ -n "${LAUNCHAGENTS_DIR:-}" ]; then
+        ok "wrote $agents/$label.plist (LAUNCHAGENTS_DIR is set, so it was not loaded)"
+        return 0
     fi
+    launchctl bootout "gui/$(id -u)/$label" 2>/dev/null || true
+    launchctl bootstrap "gui/$(id -u)" "$agents/$label.plist"
     ok "LaunchAgent $label loaded; it logs to $log"
 }
 

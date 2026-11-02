@@ -16,8 +16,9 @@ re-applies them every time the camera is plugged in and every time the Mac wakes
 - **One small binary.** Rust, talking UVC directly over USB: no `uvc-util`, no Python, no
   vendor software.
 - **Event-driven.** The agent sleeps on kernel notifications (each profile's camera appearing
-  on USB, and the Mac waking) and uses no CPU between them. Measured on macOS 27.2: 2.1 MB
-  physical footprint (Apple's own `caffeinate` uses 1.8 MB), 0.03 s of CPU in its first hour.
+  on USB, and the Mac waking) and uses no CPU between them. Measured on macOS 27.2: 2.4 MB
+  physical footprint (Apple's own `caffeinate` uses 1.8 MB; 0.3 MB of the difference is the
+  time-zone database behind local-time log lines), 0.02 s of CPU in its first minutes.
 - **One file per camera, nothing hidden in the binary.** Every setting the program uses lives
   in the profile; a missing key is an error that names it.
 
