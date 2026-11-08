@@ -38,3 +38,7 @@ GOH_RUST_LINT_CONFIGS='--target aarch64-apple-darwin:--release'
 GOH_COV_FLOOR_RUST=70
 # A commit that ADDS a test names, in a `Red-run:` trailer, the mutation that turned it red.
 GOH_RED_RUN=1
+
+# What this repo installs on this Mac, each answering the newest tag's version (read by
+# ~/Projects/.loop installs.py for loopctl verify; LOOP.INSTALLED). An app is its /Applications path.
+GOH_INSTALLS='webcam-tune'
