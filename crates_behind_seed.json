@@ -1,0 +1,12 @@
+{
+ "why": "goh crates-behind (GOH.CRATESBEHIND): a Cargo.lock `cargo update --dry-run` would move -- this repository's findings on the day the check landed, keyed by its root commit. At or under its count warns; over it, unseeded, or an entry a full run finds clean is red. Fix the site and delete or lower its entry in the same commit: done is an empty list. A seed entry lives in its own repository's tree or goh's private store, never another repository's (GOH.SEEDPRIVATE).",
+ "entries": [
+  {
+   "root": "cc82d8735a21bb3dc5ced0abd7a628e8a7394242",
+   "repo": "webcam_tune",
+   "path": "Cargo.lock",
+   "count": 9,
+   "reason": "unreviewed: `cargo update --dry-run` would move 9 crate(s) on 2026-11-09; fixed by `cargo update` in that repo"
+  }
+ ]
+}
