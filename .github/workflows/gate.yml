@@ -20,24 +20,24 @@ jobs:
     steps:
       # persist-credentials: false on both checkouts: the structural gate refuses a job token
       # left in git config, and nothing after the clone needs it.
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       # The house gates, consumed through GOH_DIR and never vendored. Public, so the default
       # token reads it.
       - name: Check out gates_of_heck
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: ztomer/gates_of_heck
           path: goh
           persist-credentials: false
       - name: Meet goh's tool floors
         uses: ./goh/.github/actions/goh-floors
-      - uses: actions/setup-python@v7
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: "3.15"
       - name: Toolchain (stable)
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable branch, no releases published (2026-10-16)
         with:
           components: rustfmt, clippy, llvm-tools-preview
       - name: Install the tools the gate requires
