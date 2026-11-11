@@ -171,14 +171,21 @@ fn the_one_line_installer_clones_the_newest_release_and_installs_from_it() {
     let listed = Command::new("git")
         .arg("-C")
         .arg(here)
-        .args(["ls-files", "--cached", "--others", "--exclude-standard"])
+        // Tracked paths only: `--others` lists an untracked nested repository (CI checks
+        // gates_of_heck out at `goh/`) as a directory, which `fs::copy` refuses.
+        .args(["ls-files", "--cached"])
         .stdin(Stdio::null())
         .output()
         .unwrap();
     for file in String::from_utf8(listed.stdout).unwrap().lines() {
+        let source = here.join(file);
+        // A tracked path deleted in the working tree, or a submodule, is not a regular file.
+        if !source.symlink_metadata().is_ok_and(|m| m.is_file()) {
+            continue;
+        }
         let target = remote.join(file);
         std::fs::create_dir_all(target.parent().unwrap()).unwrap();
-        std::fs::copy(here.join(file), target).unwrap();
+        std::fs::copy(source, target).unwrap();
     }
     git(&remote, &["init", "-q", "-b", "main"]);
     git(&remote, &["add", "-A"]);
