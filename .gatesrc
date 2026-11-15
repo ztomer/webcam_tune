@@ -45,3 +45,12 @@ GOH_INSTALLS='webcam-tune'
 
 # The one plan (goh roadmap, GOH.ROADMAPGATE): open entries only; debt in roadmap_seed.json.
 GOH_ROADMAP=none
+
+# Every scanner's floor, at nine tenths of what it read at GOH_GRACE=over
+# on 2026-11-15 (GOH.FLOORREQ; required from 2026-11-23, GOH.GRACEEND).
+GOH_BARE_OPEN_MIN_FILES=6
+GOH_GIT_DEADLINE_MIN_FILES=6
+GOH_INSTALLED_VERSION_MIN_FILES=1
+GOH_MKTEMP_PORTABLE_MIN_FILES=6
+GOH_PLURAL_HEDGE_MIN_FILES=18
+GOH_WORKFLOW_PINS_MIN_REFS=4
