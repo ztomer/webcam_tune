@@ -31,7 +31,7 @@ jobs:
           repository: ztomer/gates_of_heck
           # A named release, never main (CI.PUBLIC); goh ship moves it after each release
           # (goh wf-pin --bump), and goh goh-pins refuses it stale (GOH.WFPIN).
-          ref: v0.139.1
+          ref: v0.139.2
           path: goh
           persist-credentials: false
       - name: Meet goh's tool floors
